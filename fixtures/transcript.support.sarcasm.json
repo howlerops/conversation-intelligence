@@ -1,0 +1,34 @@
+{
+  "tenantId": "tenant_acme",
+  "conversationId": "conv_support_sarcasm",
+  "useCase": "support",
+  "participants": [
+    {
+      "speakerId": "cust_1",
+      "displayName": "Customer",
+      "metadata": {
+        "kind": "external"
+      }
+    },
+    {
+      "speakerId": "agent_1",
+      "displayName": "Agent Ana",
+      "metadata": {
+        "kind": "employee"
+      }
+    }
+  ],
+  "turns": [
+    {
+      "turnId": "t1",
+      "speakerId": "cust_1",
+      "text": "Great, another delay. Exactly what I needed today."
+    },
+    {
+      "turnId": "t2",
+      "speakerId": "agent_1",
+      "text": "I understand the shipment update is disappointing."
+    }
+  ],
+  "metadata": {}
+}

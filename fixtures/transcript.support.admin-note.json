@@ -1,0 +1,47 @@
+{
+  "tenantId": "tenant_acme",
+  "conversationId": "conv_support_admin_note",
+  "useCase": "support",
+  "participants": [
+    {
+      "speakerId": "cust_1",
+      "displayName": "Customer",
+      "metadata": {
+        "kind": "external"
+      }
+    },
+    {
+      "speakerId": "agent_1",
+      "displayName": "Agent Ana",
+      "metadata": {
+        "kind": "employee"
+      }
+    },
+    {
+      "speakerId": "note_1",
+      "displayName": "Internal Note",
+      "rawRoleLabel": "internal note",
+      "metadata": {
+        "kind": "internal"
+      }
+    }
+  ],
+  "turns": [
+    {
+      "turnId": "t1",
+      "speakerId": "cust_1",
+      "text": "You promised this would be resolved yesterday."
+    },
+    {
+      "turnId": "t2",
+      "speakerId": "note_1",
+      "text": "[ADMIN] Customer appears frustrated. Escalate if needed."
+    },
+    {
+      "turnId": "t3",
+      "speakerId": "agent_1",
+      "text": "I can request supervisor approval."
+    }
+  ],
+  "metadata": {}
+}

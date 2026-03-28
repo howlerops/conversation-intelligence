@@ -1,0 +1,39 @@
+{
+  "tenantId": "tenant_acme",
+  "conversationId": "conv_support_promise_broken",
+  "useCase": "support",
+  "participants": [
+    {
+      "speakerId": "cust_1",
+      "displayName": "Customer",
+      "metadata": {
+        "kind": "external"
+      }
+    },
+    {
+      "speakerId": "agent_1",
+      "displayName": "Agent Ana",
+      "metadata": {
+        "kind": "employee"
+      }
+    }
+  ],
+  "turns": [
+    {
+      "turnId": "t1",
+      "speakerId": "cust_1",
+      "text": "You told me this would be resolved yesterday."
+    },
+    {
+      "turnId": "t2",
+      "speakerId": "agent_1",
+      "text": "I see the refund is still pending supervisor approval."
+    },
+    {
+      "turnId": "t3",
+      "speakerId": "cust_1",
+      "text": "Please get me a supervisor because this is not acceptable."
+    }
+  ],
+  "metadata": {}
+}

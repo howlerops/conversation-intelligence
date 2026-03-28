@@ -1,0 +1,39 @@
+{
+  "tenantId": "tenant_acme",
+  "conversationId": "conv_support_basic",
+  "useCase": "support",
+  "participants": [
+    {
+      "speakerId": "cust_1",
+      "displayName": "Customer",
+      "metadata": {
+        "kind": "external"
+      }
+    },
+    {
+      "speakerId": "agent_1",
+      "displayName": "Agent Ana",
+      "metadata": {
+        "kind": "employee"
+      }
+    }
+  ],
+  "turns": [
+    {
+      "turnId": "t1",
+      "speakerId": "cust_1",
+      "text": "I was told yesterday this refund was fixed."
+    },
+    {
+      "turnId": "t2",
+      "speakerId": "agent_1",
+      "text": "Let me check that for you."
+    },
+    {
+      "turnId": "t3",
+      "speakerId": "cust_1",
+      "text": "Amazing, another seven days. That is exactly what I wanted."
+    }
+  ],
+  "metadata": {}
+}

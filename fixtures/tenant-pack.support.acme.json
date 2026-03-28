@@ -1,0 +1,56 @@
+{
+  "tenantId": "tenant_acme",
+  "packVersion": "2026-03-28.1",
+  "useCase": "support",
+  "roleAliases": {
+    "customer": "END_USER",
+    "agent ana": "AGENT",
+    "internal note": "ADMIN",
+    "system": "SYSTEM"
+  },
+  "speakerIdRoleMap": {
+    "cust_1": "END_USER",
+    "agent_1": "AGENT"
+  },
+  "ignoredSpeakerPatterns": [],
+  "analysisPolicy": {
+    "sentimentRoles": ["END_USER"],
+    "keyMomentRoles": ["END_USER"],
+    "contextRoles": ["END_USER", "AGENT", "ADMIN", "SYSTEM", "UNKNOWN"],
+    "speakerConfidenceReviewThreshold": 0.8
+  },
+  "reviewThresholds": {
+    "minimumSpeakerSummaryConfidence": 0.85,
+    "minimumOverallSentimentConfidence": 0.65,
+    "minimumAspectConfidence": 0.65,
+    "minimumEventConfidence": 0.7,
+    "minimumKeyMomentConfidence": 0.75,
+    "minimumHighImpactEvidenceCount": 1
+  },
+  "taxonomy": {
+    "canonicalToTenant": {
+      "POLICY_CONFLICT": "refund_policy_mismatch",
+      "PROMISE_BROKEN": "broken_commitment",
+      "ESCALATION_REQUEST": "supervisor_request"
+    },
+    "defaultSeverity": {
+      "POLICY_CONFLICT": "HIGH",
+      "PROMISE_BROKEN": "HIGH",
+      "ESCALATION_REQUEST": "HIGH"
+    }
+  },
+  "policyDigest": [
+    "Refunds after 30 days require supervisor approval.",
+    "Internal notes should never be treated as customer evidence."
+  ],
+  "supportedCanonicalEventTypes": [
+    "FRUSTRATION_ONSET",
+    "POLICY_CONFLICT",
+    "PROMISE_BROKEN",
+    "REPEAT_CONTACT_SIGNAL",
+    "RESOLUTION_COMMITMENT",
+    "RESOLUTION_REJECTION",
+    "ESCALATION_REQUEST",
+    "REFUND_DELAY"
+  ]
+}
