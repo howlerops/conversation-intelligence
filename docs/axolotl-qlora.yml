@@ -1,28 +1,35 @@
-# Axolotl QLoRA config for fine-tuning Qwen2.5-7B-Instruct
+# Axolotl QLoRA config for fine-tuning Qwen3-8B
 # on the conversation intelligence gold-label dataset.
 #
 # Run: axolotl train docs/axolotl-qlora.yml
 # See: docs/FINE_TUNING.md for full instructions.
+#
+# Qwen3 notes:
+#   - fix_untrained_tokens MUST be false (Axolotl bug with Qwen3)
+#   - chat_template must be tokenizer_default (not chatml) for Qwen3's token IDs
+#   - Qwen3-8B supports both thinking and non-thinking mode at inference time
+#     (we use think: false in Ollama extraParams — no training-time changes needed)
 
-base_model: Qwen/Qwen2.5-7B-Instruct
+base_model: Qwen/Qwen3-8B
 model_type: AutoModelForCausalLM
 tokenizer_type: AutoTokenizer
 
 load_in_4bit: true
 strict: false
+fix_untrained_tokens: false
 
 datasets:
   - path: output/fine-tuning/combined-train.jsonl
     type: chat_template
-    chat_template: chatml
+    chat_template: tokenizer_default
 
-# We manage our own eval split — use output/fine-tuning/eval.jsonl manually
+# We manage our own eval split — use output/fine-tuning/combined-eval.jsonl manually
 val_set_size: 0.0
-output_dir: ./output/qwen25-finetuned
+output_dir: ./output/qwen3-8b-finetuned
 
 adapter: lora
-lora_r: 16
-lora_alpha: 32
+lora_r: 32
+lora_alpha: 64
 lora_dropout: 0.05
 lora_target_linear: true
 
@@ -45,5 +52,6 @@ gradient_checkpointing: true
 logging_steps: 1
 save_strategy: epoch
 
-# Increase dropout if eval loss diverges (overfitting signal)
+# Increase dropout to 0.1 if eval loss diverges (overfitting signal on 50 examples)
 # Reduce num_epochs to 2 if overfitting persists
+# Consider bf16 LoRA (load_in_4bit: false) if QLoRA produces training instability
