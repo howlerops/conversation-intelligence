@@ -20,7 +20,7 @@ export type {
   CanonicalAnalysisRequest,
   RlmConversationEngineConfig,
 } from './rlm/engine';
-export { RlmCanonicalAnalysisEngine } from './rlm/engine';
+export { RlmCanonicalAnalysisEngine, buildOllamaCompatPromptForExport } from './rlm/engine';
 export * from './rlm/provider-profile';
 export * from './store/file-job-store';
 export * from './store/job-store';

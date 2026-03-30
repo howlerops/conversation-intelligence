@@ -1,0 +1,49 @@
+# Axolotl QLoRA config for fine-tuning Qwen2.5-7B-Instruct
+# on the conversation intelligence gold-label dataset.
+#
+# Run: axolotl train docs/axolotl-qlora.yml
+# See: docs/FINE_TUNING.md for full instructions.
+
+base_model: Qwen/Qwen2.5-7B-Instruct
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+
+load_in_4bit: true
+strict: false
+
+datasets:
+  - path: output/fine-tuning/train.jsonl
+    type: chat_template
+    chat_template: chatml
+
+# We manage our own eval split — use output/fine-tuning/eval.jsonl manually
+val_set_size: 0.0
+output_dir: ./output/qwen25-finetuned
+
+adapter: lora
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_linear: true
+
+# Long enough for full production prompts (transcript + event type guidance)
+sequence_len: 8192
+sample_packing: false
+
+micro_batch_size: 1
+gradient_accumulation_steps: 4   # effective batch = 4
+num_epochs: 3
+learning_rate: 0.0002
+optimizer: adamw_bnb_8bit
+lr_scheduler: cosine
+warmup_ratio: 0.1
+weight_decay: 0.01
+
+bf16: auto
+tf32: false
+gradient_checkpointing: true
+logging_steps: 1
+save_strategy: epoch
+
+# Increase dropout if eval loss diverges (overfitting signal)
+# Reduce num_epochs to 2 if overfitting persists

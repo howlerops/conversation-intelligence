@@ -415,6 +415,11 @@ const HARDCODED_EVENT_TYPE_LINES: string[] = [
   '- PROMISE_TO_PAY: END_USER explicitly commits to making a payment on a specific date or amount. actorRole=END_USER.',
 ];
 
+/** Exported for dataset export tooling — builds the user-turn prompt without semantic triggers. */
+export function buildOllamaCompatPromptForExport(input: Pick<CanonicalAnalysisRequest, 'query' | 'context' | 'eventTypeDefinitions' | 'supportedEventTypes'>): string {
+  return buildOllamaCompatPrompt(input as CanonicalAnalysisRequest, []);
+}
+
 function buildOllamaCompatPrompt(input: CanonicalAnalysisRequest, triggers: SemanticTrigger[]): string {
   const compactContext = compactRepeatedTokenRuns(input.context);
   const eventTypeLines = input.eventTypeDefinitions && Object.keys(input.eventTypeDefinitions).length > 0
