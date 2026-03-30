@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-30T13:49:53.300Z",
+  "totalExamples": 17,
+  "trainExamples": 14,
+  "evalExamples": 3,
+  "splitRatio": 0.8,
+  "byEngagementType": {
+    "CALL": 3,
+    "TICKET": 6,
+    "EMAIL": 8
+  },
+  "recordIds": [
+    "public-abcd-abcd-ticket-001",
+    "public-abcd-abcd-ticket-002",
+    "public-abcd-abcd-ticket-003",
+    "public-abcd-abcd-ticket-004",
+    "public-callcenteren-callcenteren-support-001",
+    "public-doc2dial-doc2dial-ticket-001",
+    "public-multidoc2dial-multidoc-ticket-001",
+    "public-synthetic_template-collections-email-001",
+    "public-synthetic_template-collections-email-002",
+    "public-synthetic_template-collections-email-003",
+    "public-synthetic_template-support-email-001",
+    "public-synthetic_template-support-email-002",
+    "public-synthetic_template-support-email-003",
+    "public-synthetic_template-support-email-004",
+    "public-synthetic_template-support-email-005",
+    "public-taskmaster-taskmaster-support-001",
+    "public-taskmaster-taskmaster-support-002"
+  ]
+}

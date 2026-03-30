@@ -39,6 +39,7 @@
     "loop:e2e:public-reviewed": "tsx examples/run-public-reviewed-benchmark.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "better-sqlite3": "^11.10.0",
     "pg": "^8.16.3",
     "recursive-llm-ts": "file:../recursive-llm-ts",

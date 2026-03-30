@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-03-30T14:04:25.933Z",
+  "totalExamples": 50,
+  "trainExamples": 40,
+  "evalExamples": 10,
+  "realTrainExamples": 14,
+  "syntheticTrainExamples": 26,
+  "realEvalExamples": 3,
+  "syntheticEvalExamples": 7,
+  "splitRatio": 0.8,
+  "engagementTypeDistribution": {
+    "TICKET": 17,
+    "UNKNOWN": 22,
+    "CALL": 1
+  },
+  "polarityDistribution": {
+    "NEGATIVE": 19,
+    "NEUTRAL": 6,
+    "VERY_NEGATIVE": 6,
+    "POSITIVE": 7,
+    "VERY_POSITIVE": 2
+  }
+}

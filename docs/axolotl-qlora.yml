@@ -12,7 +12,7 @@ load_in_4bit: true
 strict: false
 
 datasets:
-  - path: output/fine-tuning/train.jsonl
+  - path: output/fine-tuning/combined-train.jsonl
     type: chat_template
     chat_template: chatml
 

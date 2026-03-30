@@ -35,21 +35,32 @@ reduces non-determinism.
 | `fixtures/sentiment-reviewed-outcomes.support.json` | 20 | ❌ | Eval only |
 | `fixtures/benchmarks/gold-label-reviewed-100.jsonl` | 142 | ❌ (synthetic labels) | Labels reference only |
 
-17 real (transcript + analyst label) pairs is at the minimum viable threshold for LoRA.
-It's enough to calibrate scoring but you should aim for 50+ before running a production model.
+17 real (transcript + analyst label) pairs + 33 synthetic Claude Haiku generated examples = **50 total**.
+This meets the minimum viable threshold for LoRA fine-tuning with meaningful generalization.
 
-### Export the training JSONL
+### Export and augment the training JSONL
 
+**Step 1 — Export real records (17 examples):**
 ```bash
 npx tsx examples/export-fine-tuning-dataset.ts \
   --output output/fine-tuning \
   --split 0.8
 ```
 
+**Step 2 — Generate synthetic augmentation (~33 examples via Claude Haiku):**
+```bash
+ANTHROPIC_API_KEY=sk-... npx tsx examples/generate-synthetic-training-data.ts
+```
+
+**Step 3 — Merge into combined dataset (50 total):**
+```bash
+npx tsx examples/merge-fine-tuning-datasets.ts
+```
+
 This produces:
-- `output/fine-tuning/train.jsonl` — 13–14 records (80%)
-- `output/fine-tuning/eval.jsonl` — 3–4 records (20%)
-- `output/fine-tuning/manifest.json` — metadata
+- `output/fine-tuning/combined-train.jsonl` — 40 examples (14 real + 26 synthetic, 80%)
+- `output/fine-tuning/combined-eval.jsonl` — 10 examples (3 real + 7 synthetic, 20%)
+- `output/fine-tuning/manifest-combined.json` — metadata with distribution breakdown
 
 Each line is a complete OpenAI-format chat example:
 ```json
