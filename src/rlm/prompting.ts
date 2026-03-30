@@ -1,6 +1,6 @@
 import { CanonicalRole } from '../contracts/roles';
 import { SpeakerAssignment } from '../contracts/analysis';
-import { TenantPack } from '../contracts/tenant-pack';
+import { CanonicalEventDefinition, TenantPack } from '../contracts/tenant-pack';
 import { NormalizedTranscript } from '../pipeline/normalize-transcript';
 
 export const CANONICAL_ANALYSIS_PROMPT_VERSION = 'support-v0.1';
@@ -27,7 +27,13 @@ export function buildCanonicalAnalysisPrompt(
   transcript: NormalizedTranscript,
   assignments: SpeakerAssignment[],
   pack: TenantPack,
-): { query: string; context: string; promptVersion: string } {
+): {
+  query: string;
+  context: string;
+  promptVersion: string;
+  eventTypeDefinitions?: Record<string, CanonicalEventDefinition>;
+  supportedEventTypes?: string[];
+} {
   const assignmentByTurnId = new Map(assignments.map((assignment) => [assignment.turnId, assignment]));
 
   const renderedTranscript = transcript.turns
@@ -60,9 +66,18 @@ export function buildCanonicalAnalysisPrompt(
     renderedTranscript,
   ];
 
+  // Expose dynamic event type definitions when the tenant pack provides them.
+  const hasDefinitions = Object.keys(pack.canonicalEventDefinitions).length > 0;
+
   return {
     query,
     context: contextSections.join('\n'),
     promptVersion: CANONICAL_ANALYSIS_PROMPT_VERSION,
+    ...(hasDefinitions
+      ? {
+        eventTypeDefinitions: pack.canonicalEventDefinitions,
+        supportedEventTypes: pack.supportedCanonicalEventTypes,
+      }
+      : {}),
   };
 }

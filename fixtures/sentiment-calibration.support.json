@@ -1,0 +1,344 @@
+[
+  {
+    "name": "very_negative_escalation",
+    "category": "critical_negative",
+    "reviewedBy": "analyst_alex",
+    "reviewedAt": "2026-03-25T18:00:00.000Z",
+    "note": "Escalation demand should stay in the worst bucket.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.96,
+      "confidence": 0.94,
+      "rationale": "The customer is highly dissatisfied and requests escalation."
+    },
+    "expected": {
+      "score100": 2,
+      "score5": 1,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "strong_negative_chargeback_threat",
+    "category": "critical_negative",
+    "reviewedBy": "analyst_alex",
+    "reviewedAt": "2026-03-25T18:05:00.000Z",
+    "note": "Chargeback threats are unambiguously severe.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.82,
+      "confidence": 0.93,
+      "rationale": "The customer threatens a chargeback if the issue is not fixed."
+    },
+    "expected": {
+      "score100": 9,
+      "score5": 1,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "severe_negative_cancellation_risk",
+    "category": "critical_negative",
+    "reviewedBy": "analyst_jo",
+    "reviewedAt": "2026-03-25T18:10:00.000Z",
+    "note": "Cancellation risk sits at the edge of bucket one.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.7,
+      "confidence": 0.9,
+      "rationale": "The customer says they will cancel unless the issue is fixed today."
+    },
+    "expected": {
+      "score100": 14,
+      "score5": 1,
+      "score100Tolerance": 2,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "moderate_negative_delay",
+    "category": "moderate_negative",
+    "reviewedBy": "analyst_alex",
+    "reviewedAt": "2026-03-25T18:15:00.000Z",
+    "note": "Delay frustration is still clearly negative.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.52,
+      "confidence": 0.88,
+      "rationale": "The customer is frustrated by an unresolved delay."
+    },
+    "expected": {
+      "score100": 24,
+      "score5": 2,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "contained_negative_follow_up",
+    "category": "moderate_negative",
+    "reviewedBy": "analyst_jo",
+    "reviewedAt": "2026-03-25T18:20:00.000Z",
+    "note": "Still unhappy, but the customer is cooperative.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.34,
+      "confidence": 0.79,
+      "rationale": "The customer is clearly unhappy but still cooperative."
+    },
+    "expected": {
+      "score100": 35,
+      "score5": 2,
+      "score100Tolerance": 2,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "refund_delay_irritation",
+    "category": "moderate_negative",
+    "reviewedBy": "analyst_sam",
+    "reviewedAt": "2026-03-25T18:25:00.000Z",
+    "note": "Refund delay anger should remain bucket two, not bucket one.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.44,
+      "confidence": 0.84,
+      "rationale": "The customer is irritated that the refund has still not posted."
+    },
+    "expected": {
+      "score100": 30,
+      "score5": 2,
+      "score100Tolerance": 2,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "near_neutral_watchful",
+    "category": "edge_negative",
+    "reviewedBy": "analyst_alex",
+    "reviewedAt": "2026-03-25T18:30:00.000Z",
+    "note": "Borderline negative, but not enough for bucket two.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.18,
+      "confidence": 0.72,
+      "rationale": "The customer sounds mildly negative but not yet strongly dissatisfied."
+    },
+    "expected": {
+      "score100": 41,
+      "score5": 3,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "mild_negative_waiting",
+    "category": "edge_negative",
+    "reviewedBy": "analyst_jo",
+    "reviewedAt": "2026-03-25T18:35:00.000Z",
+    "note": "Waiting frustration should stay close to neutral.",
+    "sentiment": {
+      "polarity": "NEGATIVE",
+      "intensity": 0.08,
+      "confidence": 0.69,
+      "rationale": "The customer shows a slight negative tone while waiting for an update."
+    },
+    "expected": {
+      "score100": 46,
+      "score5": 3,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "neutral_resolution_pending",
+    "category": "neutral",
+    "reviewedBy": "analyst_sam",
+    "reviewedAt": "2026-03-25T18:40:00.000Z",
+    "note": "Pure neutral baseline.",
+    "sentiment": {
+      "polarity": "NEUTRAL",
+      "intensity": 0,
+      "confidence": 0.83,
+      "rationale": "The customer is waiting for the outcome without strong emotion."
+    },
+    "expected": {
+      "score100": 50,
+      "score5": 3,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "neutral_cautious_follow_up",
+    "category": "neutral",
+    "reviewedBy": "analyst_alex",
+    "reviewedAt": "2026-03-25T18:45:00.000Z",
+    "note": "Cautious but not net positive or negative.",
+    "sentiment": {
+      "polarity": "NEUTRAL",
+      "intensity": 0,
+      "confidence": 0.76,
+      "rationale": "The customer acknowledges the plan and waits for confirmation."
+    },
+    "expected": {
+      "score100": 50,
+      "score5": 3,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "slightly_positive_reassured",
+    "category": "edge_positive",
+    "reviewedBy": "analyst_jo",
+    "reviewedAt": "2026-03-25T18:50:00.000Z",
+    "note": "Reassurance without clear gratitude should remain bucket three.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.12,
+      "confidence": 0.78,
+      "rationale": "The customer sounds slightly more comfortable after hearing a concrete plan."
+    },
+    "expected": {
+      "score100": 56,
+      "score5": 3,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "cautious_positive_plan_acceptance",
+    "category": "edge_positive",
+    "reviewedBy": "analyst_sam",
+    "reviewedAt": "2026-03-25T18:55:00.000Z",
+    "note": "Slightly better than neutral but still cautious.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.18,
+      "confidence": 0.8,
+      "rationale": "The customer accepts the plan and says that sounds okay for now."
+    },
+    "expected": {
+      "score100": 60,
+      "score5": 3,
+      "score100Tolerance": 1,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "moderate_positive_reassured",
+    "category": "moderate_positive",
+    "reviewedBy": "analyst_alex",
+    "reviewedAt": "2026-03-25T19:00:00.000Z",
+    "note": "Confident plan acceptance is bucket four.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.36,
+      "confidence": 0.86,
+      "rationale": "The customer sounds reassured after a clear next step."
+    },
+    "expected": {
+      "score100": 68,
+      "score5": 4,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "moderate_positive_grateful",
+    "category": "moderate_positive",
+    "reviewedBy": "analyst_jo",
+    "reviewedAt": "2026-03-25T19:05:00.000Z",
+    "note": "Gratitude after resolution belongs in bucket four.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.48,
+      "confidence": 0.9,
+      "rationale": "The customer is clearly appreciative after the agent resolves the issue."
+    },
+    "expected": {
+      "score100": 74,
+      "score5": 4,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "clear_positive_follow_up",
+    "category": "moderate_positive",
+    "reviewedBy": "analyst_sam",
+    "reviewedAt": "2026-03-25T19:10:00.000Z",
+    "note": "A warm but not ecstatic response sits near the bottom of bucket four.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.32,
+      "confidence": 0.84,
+      "rationale": "The customer thanks the agent and confirms the fix sounds good."
+    },
+    "expected": {
+      "score100": 65,
+      "score5": 4,
+      "score100Tolerance": 1,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "strong_positive_delighted",
+    "category": "strong_positive",
+    "reviewedBy": "analyst_alex",
+    "reviewedAt": "2026-03-25T19:15:00.000Z",
+    "note": "Delight should remain in the top bucket.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.62,
+      "confidence": 0.93,
+      "rationale": "The customer is enthusiastic about the outcome and the speed of service."
+    },
+    "expected": {
+      "score100": 81,
+      "score5": 5,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "strong_positive_resolved",
+    "category": "strong_positive",
+    "reviewedBy": "analyst_jo",
+    "reviewedAt": "2026-03-25T19:20:00.000Z",
+    "note": "Clear resolution success should be close to the ceiling.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.9,
+      "confidence": 0.95,
+      "rationale": "The customer is clearly satisfied after the issue is resolved."
+    },
+    "expected": {
+      "score100": 95,
+      "score5": 5,
+      "score100Tolerance": 0,
+      "score5Tolerance": 0
+    }
+  },
+  {
+    "name": "thrilled_loyalty_save",
+    "category": "strong_positive",
+    "reviewedBy": "analyst_sam",
+    "reviewedAt": "2026-03-25T19:25:00.000Z",
+    "note": "Save offers with strong delight should stay in bucket five even with slight score drift.",
+    "sentiment": {
+      "polarity": "POSITIVE",
+      "intensity": 0.76,
+      "confidence": 0.92,
+      "rationale": "The customer is thrilled that the team saved the account and fixed the issue."
+    },
+    "expected": {
+      "score100": 86,
+      "score5": 5,
+      "score100Tolerance": 2,
+      "score5Tolerance": 0
+    }
+  }
+]

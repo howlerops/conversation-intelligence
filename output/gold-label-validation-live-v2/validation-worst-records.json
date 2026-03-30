@@ -1,0 +1,62 @@
+[
+  {
+    "recordId": "public-synthetic_template-support-email-001",
+    "engagementType": "EMAIL",
+    "deltaScore100": 8,
+    "reason": "Score delta: 8 points"
+  },
+  {
+    "recordId": "public-synthetic_template-collections-email-003",
+    "engagementType": "EMAIL",
+    "deltaScore100": 6,
+    "reason": "Score delta: 6 points"
+  },
+  {
+    "recordId": "public-abcd-abcd-ticket-001",
+    "engagementType": "TICKET",
+    "deltaScore100": 4,
+    "reason": "Score delta: 4 points"
+  },
+  {
+    "recordId": "public-abcd-abcd-ticket-002",
+    "engagementType": "TICKET",
+    "deltaScore100": 3,
+    "reason": "Score delta: 3 points"
+  },
+  {
+    "recordId": "public-synthetic_template-collections-email-002",
+    "engagementType": "EMAIL",
+    "deltaScore100": 2,
+    "reason": "Score delta: 2 points"
+  },
+  {
+    "recordId": "public-multidoc2dial-multidoc-ticket-001",
+    "engagementType": "TICKET",
+    "deltaScore100": 2,
+    "reason": "Score delta: 2 points"
+  },
+  {
+    "recordId": "public-callcenteren-callcenteren-support-001",
+    "engagementType": "CALL",
+    "deltaScore100": 2,
+    "reason": "Score delta: 2 points"
+  },
+  {
+    "recordId": "public-taskmaster-taskmaster-support-002",
+    "engagementType": "CALL",
+    "deltaScore100": 1,
+    "reason": "Score delta: 1 points"
+  },
+  {
+    "recordId": "public-abcd-abcd-ticket-003",
+    "engagementType": "TICKET",
+    "deltaScore100": 1,
+    "reason": "Polarity mismatch: model=NEGATIVE, analyst=NEUTRAL"
+  },
+  {
+    "recordId": "public-synthetic_template-support-email-003",
+    "engagementType": "EMAIL",
+    "deltaScore100": 1,
+    "reason": "Score delta: 1 points"
+  }
+]

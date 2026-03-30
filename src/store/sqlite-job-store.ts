@@ -1,14 +1,19 @@
 import Database from 'better-sqlite3';
-import { dirname } from 'path';
 import { mkdirSync } from 'fs';
+import { dirname } from 'path';
 import {
   AnalysisJobRecord,
+  AuditEventsSnapshot,
   ReviewQueueSnapshot,
+  RunEventsSnapshot,
   analysisJobRecordSchema,
+  auditEventsSnapshotSchema,
   reviewQueueSnapshotSchema,
+  runEventsSnapshotSchema,
 } from '../contracts/jobs';
 import { reviewQueueItemSchema } from '../contracts/analysis';
-import { JobStore } from './job-store';
+import { AuditEvent, auditEventSchema, RunEvent, runEventSchema } from '../contracts/runtime';
+import { AuditEventFilters, JobListFilters, JobStore } from './job-store';
 
 type JobRow = {
   job_id: string;
@@ -23,6 +28,28 @@ type JobRow = {
   pii_redaction_summary_json: string | null;
   result_json: string | null;
   error_json: string | null;
+};
+
+type RunEventRow = {
+  event_id: string;
+  run_id: string;
+  tenant_id: string;
+  type: string;
+  created_at: string;
+  summary: string;
+  actor_json: string | null;
+  metadata_json: string | null;
+};
+
+type AuditEventRow = {
+  audit_id: string;
+  tenant_id: string;
+  action: string;
+  resource_type: string;
+  resource_id: string | null;
+  occurred_at: string;
+  actor_json: string;
+  metadata_json: string | null;
 };
 
 export class SqliteJobStore implements JobStore {
@@ -51,17 +78,42 @@ export class SqliteJobStore implements JobStore {
         error_json TEXT
       );
 
+      CREATE TABLE IF NOT EXISTS run_events (
+        event_id TEXT PRIMARY KEY,
+        run_id TEXT NOT NULL,
+        tenant_id TEXT NOT NULL,
+        type TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        summary TEXT NOT NULL,
+        actor_json TEXT,
+        metadata_json TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS audit_events (
+        audit_id TEXT PRIMARY KEY,
+        tenant_id TEXT NOT NULL,
+        action TEXT NOT NULL,
+        resource_type TEXT NOT NULL,
+        resource_id TEXT,
+        occurred_at TEXT NOT NULL,
+        actor_json TEXT NOT NULL,
+        metadata_json TEXT
+      );
+
       CREATE INDEX IF NOT EXISTS idx_jobs_status_created_at
       ON jobs(status, created_at);
+
+      CREATE INDEX IF NOT EXISTS idx_jobs_tenant_created_at
+      ON jobs(tenant_id, created_at);
+
+      CREATE INDEX IF NOT EXISTS idx_run_events_run_created_at
+      ON run_events(run_id, created_at);
+
+      CREATE INDEX IF NOT EXISTS idx_audit_events_tenant_occurred_at
+      ON audit_events(tenant_id, occurred_at);
     `);
 
-    const columns = this.database
-      .prepare("SELECT name FROM pragma_table_info('jobs')")
-      .all() as Array<{ name: string }>;
-
-    if (!columns.some((column) => column.name === 'pii_redaction_summary_json')) {
-      this.database.exec('ALTER TABLE jobs ADD COLUMN pii_redaction_summary_json TEXT');
-    }
+    this.ensureColumn('jobs', 'pii_redaction_summary_json', 'TEXT');
   }
 
   close(): void {
@@ -74,14 +126,16 @@ export class SqliteJobStore implements JobStore {
     this.database
       .prepare(`
         INSERT INTO jobs (
-        job_id, status, tenant_id, conversation_id, use_case,
-        created_at, updated_at, worker_id, request_json, pii_redaction_summary_json, result_json, error_json
+          job_id, status, tenant_id, conversation_id, use_case,
+          created_at, updated_at, worker_id, request_json,
+          pii_redaction_summary_json, result_json, error_json
         ) VALUES (
           @job_id, @status, @tenant_id, @conversation_id, @use_case,
-          @created_at, @updated_at, @worker_id, @request_json, @pii_redaction_summary_json, @result_json, @error_json
+          @created_at, @updated_at, @worker_id, @request_json,
+          @pii_redaction_summary_json, @result_json, @error_json
         )
       `)
-      .run(this.toRow(parsed));
+      .run(this.toJobRow(parsed));
 
     return parsed;
   }
@@ -91,7 +145,7 @@ export class SqliteJobStore implements JobStore {
       .prepare('SELECT * FROM jobs WHERE job_id = ?')
       .get(jobId) as JobRow | undefined;
 
-    return row ? this.fromRow(row) : null;
+    return row ? this.fromJobRow(row) : null;
   }
 
   async updateJob(job: AnalysisJobRecord): Promise<AnalysisJobRecord> {
@@ -114,21 +168,25 @@ export class SqliteJobStore implements JobStore {
           error_json = @error_json
         WHERE job_id = @job_id
       `)
-      .run(this.toRow(parsed));
+      .run(this.toJobRow(parsed));
 
     return parsed;
   }
 
-  async listJobs(): Promise<AnalysisJobRecord[]> {
-    const rows = this.database
-      .prepare('SELECT * FROM jobs ORDER BY created_at ASC')
-      .all() as JobRow[];
+  async listJobs(filters: JobListFilters = {}): Promise<AnalysisJobRecord[]> {
+    const rows = filters.tenantId
+      ? this.database
+        .prepare('SELECT * FROM jobs WHERE tenant_id = ? ORDER BY created_at ASC')
+        .all(filters.tenantId)
+      : this.database
+        .prepare('SELECT * FROM jobs ORDER BY created_at ASC')
+        .all();
 
-    return rows.map((row) => this.fromRow(row));
+    return (rows as JobRow[]).map((row) => this.fromJobRow(row));
   }
 
-  async listReviewQueue(): Promise<ReviewQueueSnapshot> {
-    const jobs = await this.listJobs();
+  async listReviewQueue(tenantId?: string): Promise<ReviewQueueSnapshot> {
+    const jobs = await this.listJobs(tenantId ? { tenantId } : {});
 
     const items = jobs
       .filter((job) => job.status === 'COMPLETED' && job.result?.review.state === 'NEEDS_REVIEW')
@@ -149,7 +207,7 @@ export class SqliteJobStore implements JobStore {
 
   async claimNextQueuedJob(workerId: string, claimedAt: string): Promise<AnalysisJobRecord | null> {
     const transaction = this.database.transaction((id: string, updatedAt: string) => {
-      const row = this.database
+      const queuedRow = this.database
         .prepare(`
           SELECT * FROM jobs
           WHERE status = 'QUEUED'
@@ -158,26 +216,113 @@ export class SqliteJobStore implements JobStore {
         `)
         .get() as JobRow | undefined;
 
-      if (!row) {
+      if (!queuedRow) {
         return null;
       }
 
-      this.database
+      const result = this.database
         .prepare(`
           UPDATE jobs
           SET status = 'RUNNING', updated_at = ?, worker_id = ?
-          WHERE job_id = ?
+          WHERE job_id = ? AND status = 'QUEUED'
         `)
-        .run(updatedAt, id, row.job_id);
+        .run(updatedAt, id, queuedRow.job_id);
+
+      if (result.changes === 0) {
+        return null;
+      }
 
       const claimedRow = this.database
         .prepare('SELECT * FROM jobs WHERE job_id = ?')
-        .get(row.job_id) as JobRow;
+        .get(queuedRow.job_id) as JobRow;
 
-      return this.fromRow(claimedRow);
+      return this.fromJobRow(claimedRow);
     });
 
     return transaction(workerId, claimedAt);
+  }
+
+  async appendRunEvent(event: RunEvent): Promise<RunEvent> {
+    const parsed = runEventSchema.parse(event);
+
+    this.database
+      .prepare(`
+        INSERT INTO run_events (
+          event_id, run_id, tenant_id, type, created_at, summary, actor_json, metadata_json
+        ) VALUES (
+          @event_id, @run_id, @tenant_id, @type, @created_at, @summary, @actor_json, @metadata_json
+        )
+      `)
+      .run(this.toRunEventRow(parsed));
+
+    return parsed;
+  }
+
+  async listRunEvents(runId: string): Promise<RunEventsSnapshot> {
+    const rows = this.database
+      .prepare('SELECT * FROM run_events WHERE run_id = ? ORDER BY created_at ASC')
+      .all(runId) as RunEventRow[];
+
+    return runEventsSnapshotSchema.parse({
+      runId,
+      events: rows.map((row) => this.fromRunEventRow(row)),
+    });
+  }
+
+  async appendAuditEvent(event: AuditEvent): Promise<AuditEvent> {
+    const parsed = auditEventSchema.parse(event);
+
+    this.database
+      .prepare(`
+        INSERT INTO audit_events (
+          audit_id, tenant_id, action, resource_type, resource_id,
+          occurred_at, actor_json, metadata_json
+        ) VALUES (
+          @audit_id, @tenant_id, @action, @resource_type, @resource_id,
+          @occurred_at, @actor_json, @metadata_json
+        )
+      `)
+      .run(this.toAuditEventRow(parsed));
+
+    return parsed;
+  }
+
+  async listAuditEvents(filters: AuditEventFilters = {}): Promise<AuditEventsSnapshot> {
+    let query = 'SELECT * FROM audit_events';
+    const params: string[] = [];
+    const clauses: string[] = [];
+
+    if (filters.tenantId) {
+      clauses.push('tenant_id = ?');
+      params.push(filters.tenantId);
+    }
+
+    if (filters.resourceId) {
+      clauses.push('resource_id = ?');
+      params.push(filters.resourceId);
+    }
+
+    if (clauses.length > 0) {
+      query += ` WHERE ${clauses.join(' AND ')}`;
+    }
+
+    query += ' ORDER BY occurred_at ASC';
+
+    const rows = this.database.prepare(query).all(...params) as AuditEventRow[];
+
+    return auditEventsSnapshotSchema.parse({
+      items: rows.map((row) => this.fromAuditEventRow(row)),
+    });
+  }
+
+  private ensureColumn(tableName: string, columnName: string, columnDefinition: string): void {
+    const columns = this.database
+      .prepare(`SELECT name FROM pragma_table_info('${tableName}')`)
+      .all() as Array<{ name: string }>;
+
+    if (!columns.some((column) => column.name === columnName)) {
+      this.database.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnDefinition}`);
+    }
   }
 
   private deriveSeverity(
@@ -198,7 +343,7 @@ export class SqliteJobStore implements JobStore {
     return 'LOW';
   }
 
-  private toRow(job: AnalysisJobRecord): JobRow {
+  private toJobRow(job: AnalysisJobRecord): JobRow {
     return {
       job_id: job.jobId,
       status: job.status,
@@ -215,7 +360,7 @@ export class SqliteJobStore implements JobStore {
     };
   }
 
-  private fromRow(row: JobRow): AnalysisJobRecord {
+  private fromJobRow(row: JobRow): AnalysisJobRecord {
     return analysisJobRecordSchema.parse({
       jobId: row.job_id,
       status: row.status,
@@ -228,6 +373,58 @@ export class SqliteJobStore implements JobStore {
       piiRedactionSummary: row.pii_redaction_summary_json ? JSON.parse(row.pii_redaction_summary_json) : undefined,
       result: row.result_json ? JSON.parse(row.result_json) : undefined,
       error: row.error_json ? JSON.parse(row.error_json) : undefined,
+    });
+  }
+
+  private toRunEventRow(event: RunEvent): RunEventRow {
+    return {
+      event_id: event.eventId,
+      run_id: event.runId,
+      tenant_id: event.tenantId,
+      type: event.type,
+      created_at: event.createdAt,
+      summary: event.summary,
+      actor_json: event.actor ? JSON.stringify(event.actor) : null,
+      metadata_json: JSON.stringify(event.metadata),
+    };
+  }
+
+  private fromRunEventRow(row: RunEventRow): RunEvent {
+    return runEventSchema.parse({
+      eventId: row.event_id,
+      runId: row.run_id,
+      tenantId: row.tenant_id,
+      type: row.type,
+      createdAt: row.created_at,
+      summary: row.summary,
+      actor: row.actor_json ? JSON.parse(row.actor_json) : undefined,
+      metadata: row.metadata_json ? JSON.parse(row.metadata_json) : {},
+    });
+  }
+
+  private toAuditEventRow(event: AuditEvent): AuditEventRow {
+    return {
+      audit_id: event.auditId,
+      tenant_id: event.tenantId,
+      action: event.action,
+      resource_type: event.resourceType,
+      resource_id: event.resourceId ?? null,
+      occurred_at: event.occurredAt,
+      actor_json: JSON.stringify(event.actor),
+      metadata_json: JSON.stringify(event.metadata),
+    };
+  }
+
+  private fromAuditEventRow(row: AuditEventRow): AuditEvent {
+    return auditEventSchema.parse({
+      auditId: row.audit_id,
+      tenantId: row.tenant_id,
+      action: row.action,
+      resourceType: row.resource_type,
+      resourceId: row.resource_id ?? undefined,
+      occurredAt: row.occurred_at,
+      actor: JSON.parse(row.actor_json),
+      metadata: row.metadata_json ? JSON.parse(row.metadata_json) : {},
     });
   }
 }

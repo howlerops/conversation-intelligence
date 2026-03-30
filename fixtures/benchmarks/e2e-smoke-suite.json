@@ -1,0 +1,25 @@
+{
+  "sources": [
+    {
+      "sourceId": "public-support-call-smoke",
+      "kind": "public_pipeline_suite",
+      "path": "../public-data/pipeline-suite.json",
+      "tenantPackPath": "../tenant-pack.support.acme.json",
+      "engagementTypes": ["CALL"]
+    },
+    {
+      "sourceId": "public-support-email-smoke",
+      "kind": "public_pipeline_suite",
+      "path": "../public-data/pipeline-suite.json",
+      "tenantPackPath": "../tenant-pack.support.acme.json",
+      "engagementTypes": ["EMAIL"]
+    },
+    {
+      "sourceId": "public-support-ticket-smoke",
+      "kind": "public_pipeline_suite",
+      "path": "../public-data/pipeline-suite.json",
+      "tenantPackPath": "../tenant-pack.support.acme.json",
+      "engagementTypes": ["TICKET"]
+    }
+  ]
+}

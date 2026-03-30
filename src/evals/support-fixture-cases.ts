@@ -100,6 +100,8 @@ export const supportFixtureEvalCases: SupportFixtureEvalCase[] = [
       review: {
         state: 'VERIFIED',
         reasons: [],
+        comments: [],
+        history: [],
       },
     },
     expected: {
@@ -142,6 +144,8 @@ export const supportFixtureEvalCases: SupportFixtureEvalCase[] = [
       review: {
         state: 'VERIFIED',
         reasons: [],
+        comments: [],
+        history: [],
       },
     },
     expected: {
@@ -216,6 +220,8 @@ export const supportFixtureEvalCases: SupportFixtureEvalCase[] = [
       review: {
         state: 'VERIFIED',
         reasons: [],
+        comments: [],
+        history: [],
       },
     },
     expected: {
@@ -241,6 +247,8 @@ export const supportFixtureEvalCases: SupportFixtureEvalCase[] = [
       review: {
         state: 'VERIFIED',
         reasons: [],
+        comments: [],
+        history: [],
       },
     },
     expected: {

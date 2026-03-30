@@ -1,0 +1,152 @@
+{
+  "pipelines": [
+    {
+      "pipelineId": "support-ticket-doc2dial",
+      "tenantId": "public_eval",
+      "useCase": "support",
+      "dataset": "DOC2DIAL",
+      "datasetTrack": "OPEN_CORE",
+      "engagementType": "TICKET",
+      "description": "Policy-grounded support ticket slice modeled for Doc2Dial-style grounding and blocker detection.",
+      "notes": [
+        "Use for open-core support ticket evals with document-grounded policy references."
+      ],
+      "records": [
+        {
+          "recordId": "doc2dial-ticket-001",
+          "ticketId": "doc2dial_ticket_001",
+          "title": "Return window confusion",
+          "participants": [
+            {
+              "speakerId": "user_1",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "agent_1",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "ticket"
+              }
+            }
+          ],
+          "comments": [
+            {
+              "commentId": "c1",
+              "authorId": "user_1",
+              "bodyText": "Your return article says thirty days, but your last agent told me I was already too late after twenty-five.",
+              "createdAt": "2026-03-28T12:00:00.000Z",
+              "metadata": {
+                "documentSection": "returns_policy"
+              }
+            },
+            {
+              "commentId": "c2",
+              "authorId": "agent_1",
+              "bodyText": "I am checking the policy update and will confirm the correct deadline.",
+              "createdAt": "2026-03-28T12:10:00.000Z",
+              "metadata": {
+                "documentSection": "returns_policy"
+              }
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.58,
+              "confidence": 0.91,
+              "rationale": "Customer points out conflicting policy guidance and asks for clarification.",
+              "analystScore100": 29,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": ["POLICY_CONFLICT"],
+            "tags": ["support", "ticket", "document_grounded"],
+            "category": "support_policy_conflict"
+          },
+          "metadata": {
+            "sourceCorpus": "doc2dial"
+          }
+        }
+      ]
+    },
+    {
+      "pipelineId": "support-ticket-multidoc2dial",
+      "tenantId": "public_eval",
+      "useCase": "support",
+      "dataset": "MULTIDOC2DIAL",
+      "datasetTrack": "OPEN_CORE",
+      "engagementType": "TICKET",
+      "description": "Multi-document support ticket slice for multi-scene policy grounding and resolution blockers.",
+      "notes": [
+        "Use for policy lookup and blocker discovery across multiple support documents."
+      ],
+      "records": [
+        {
+          "recordId": "multidoc-ticket-001",
+          "ticketId": "multidoc_ticket_001",
+          "title": "Warranty claim document mismatch",
+          "participants": [
+            {
+              "speakerId": "user_2",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "agent_2",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "ticket"
+              }
+            }
+          ],
+          "comments": [
+            {
+              "commentId": "c1",
+              "authorId": "user_2",
+              "bodyText": "The warranty page says a receipt or serial number is enough, but the claims form rejected me without both documents.",
+              "createdAt": "2026-03-28T12:20:00.000Z",
+              "metadata": {
+                "documentSection": "warranty_claims"
+              }
+            },
+            {
+              "commentId": "c2",
+              "authorId": "agent_2",
+              "bodyText": "I am escalating this because the form requirements do not match the published guidance.",
+              "createdAt": "2026-03-28T12:30:00.000Z",
+              "metadata": {
+                "documentSection": "claims_form"
+              }
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.63,
+              "confidence": 0.9,
+              "rationale": "Customer reports a document blocker caused by conflicting documentation.",
+              "analystScore100": 26,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": ["POLICY_CONFLICT", "DOCUMENT_BLOCKER"],
+            "tags": ["support", "ticket", "multi_document"],
+            "category": "support_document_blocker"
+          },
+          "metadata": {
+            "sourceCorpus": "multidoc2dial"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -101,6 +101,7 @@ export function verifyAnalysis(
   return {
     ...analysis,
     review: {
+      ...analysis.review,
       state: reasons.size > 0 ? 'NEEDS_REVIEW' : analysis.review.state,
       reasons: Array.from(reasons),
     },

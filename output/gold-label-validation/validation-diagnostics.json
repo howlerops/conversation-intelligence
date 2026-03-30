@@ -1,0 +1,18 @@
+[
+  {
+    "severity": "HIGH",
+    "category": "Key moment detection gap",
+    "description": "Key moment recall is 43% — model is missing more than half of expected key moments.",
+    "affectedRecordCount": 6,
+    "metric": "key_moment_macro_recall",
+    "metricValue": 0.4333
+  },
+  {
+    "severity": "MEDIUM",
+    "category": "EMAIL performance gap",
+    "description": "EMAIL has 5.0pt higher average delta than CALL — may indicate engagement-type-specific calibration needed.",
+    "affectedRecordCount": 7,
+    "metric": "engagement_type_delta_gap",
+    "metricValue": 5
+  }
+]

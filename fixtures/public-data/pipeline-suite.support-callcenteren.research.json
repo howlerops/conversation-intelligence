@@ -1,0 +1,74 @@
+{
+  "pipelines": [
+    {
+      "pipelineId": "support-call-callcenteren",
+      "tenantId": "public_eval",
+      "useCase": "support",
+      "dataset": "CALLCENTEREN",
+      "datasetTrack": "RESEARCH_ONLY",
+      "engagementType": "CALL",
+      "description": "Research-only call-center support slice for closer call-center phrasing and escalation behavior.",
+      "notes": [
+        "Keep this manifest out of the default open-core package.",
+        "Use it for benchmarking and research-only shadow comparisons."
+      ],
+      "records": [
+        {
+          "recordId": "callcenteren-support-001",
+          "conversationId": "ccen_support_001",
+          "participants": [
+            {
+              "speakerId": "caller_1",
+              "displayName": "Caller",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "phone"
+              }
+            },
+            {
+              "speakerId": "agent_1",
+              "displayName": "Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "phone"
+              }
+            }
+          ],
+          "turns": [
+            {
+              "turnId": "t1",
+              "speakerId": "caller_1",
+              "text": "I have explained this three times and your team still has not fixed the account lock.",
+              "startedAt": "2026-03-28T13:00:00.000Z",
+              "metadata": {}
+            },
+            {
+              "turnId": "t2",
+              "speakerId": "agent_1",
+              "text": "I understand, and I am escalating it to the supervisor desk now.",
+              "startedAt": "2026-03-28T13:00:10.000Z",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.79,
+              "confidence": 0.93,
+              "rationale": "Caller expresses repeated-contact frustration and requests a higher level of action.",
+              "analystScore100": 16,
+              "reviewedBy": "research_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": ["REPEAT_CONTACT_SIGNAL", "ESCALATION_REQUEST"],
+            "tags": ["support", "call", "research_only"],
+            "category": "support_repeated_contact"
+          },
+          "metadata": {
+            "sourceCorpus": "callcenteren"
+          }
+        }
+      ]
+    }
+  ]
+}

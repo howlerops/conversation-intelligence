@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { conversationAnalysisSchema, reviewQueueItemSchema } from './analysis';
 import { piiConfigSchema, piiRedactionSummarySchema } from './pii';
+import { auditEventSchema, runEventSchema } from './runtime';
 import { transcriptInputSchema } from './transcript';
 import { tenantPackSchema } from './tenant-pack';
 
@@ -10,6 +11,7 @@ export const analysisRequestSchema = z.object({
   piiConfig: piiConfigSchema.default({
     enabled: true,
     maskDisplayNames: false,
+    reversible: false,
     customRegexRules: [],
   }),
 });
@@ -45,9 +47,22 @@ export const analysisJobRecordSchema = z.object({
 
 export type AnalysisJobRecord = z.infer<typeof analysisJobRecordSchema>;
 
+export const runEventsSnapshotSchema = z.object({
+  runId: z.string().min(1),
+  events: z.array(runEventSchema),
+});
+
+export type RunEventsSnapshot = z.infer<typeof runEventsSnapshotSchema>;
+
 export const reviewQueueSnapshotSchema = z.object({
   generatedAt: z.string().min(1),
   items: z.array(reviewQueueItemSchema),
 });
 
 export type ReviewQueueSnapshot = z.infer<typeof reviewQueueSnapshotSchema>;
+
+export const auditEventsSnapshotSchema = z.object({
+  items: z.array(auditEventSchema),
+});
+
+export type AuditEventsSnapshot = z.infer<typeof auditEventsSnapshotSchema>;

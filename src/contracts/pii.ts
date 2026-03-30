@@ -13,6 +13,7 @@ export type PiiRegexRuleDraft = z.input<typeof piiRegexRuleSchema>;
 export const piiConfigSchema = z.object({
   enabled: z.boolean().default(true),
   maskDisplayNames: z.boolean().default(false),
+  reversible: z.boolean().default(false),
   customRegexRules: z.array(piiRegexRuleSchema).default([]),
 });
 

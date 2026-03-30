@@ -1,0 +1,166 @@
+{
+  "tasks": [
+    {
+      "id": "validation-reviewed-dataset-inventory",
+      "title": "Reviewed dataset inventory and larger-volume ingestion",
+      "status": "done",
+      "completedAt": "2026-03-28T16:58:00Z",
+      "summary": "Add reviewed dataset inventory, support compressed reviewed datasets, and expose the inventory over HTTP/UI.",
+      "verifyCommands": [
+        "npm run typecheck",
+        "npx vitest run test/model-validation-service.test.ts test/model-validation-http.test.ts test/reviewed-sentiment-validation.test.ts"
+      ]
+    },
+    {
+      "id": "validation-public-email-ticket-expansion",
+      "title": "Expand public EMAIL and TICKET validation slices",
+      "status": "done",
+      "completedAt": "2026-03-28T16:58:00Z",
+      "summary": "Add more support-representative medium and long email/ticket public records and keep downstream pipeline tests green.",
+      "verifyCommands": [
+        "npx vitest run test/public-data-test-pipeline.test.ts test/public-shadow-comparison.test.ts",
+        "npm run build:public-test-pipelines -- fixtures/public-data/pipeline-suite.json /tmp/conversation-intelligence-public-evals"
+      ]
+    },
+    {
+      "id": "validation-queue-length-dashboard",
+      "title": "Queue and transcript-length validation dashboarding",
+      "status": "done",
+      "completedAt": "2026-03-28T16:58:00Z",
+      "summary": "Emit queue and transcript-length scoped validation alerts and surface the breakdowns in the self-hosted console.",
+      "verifyCommands": [
+        "npx vitest run test/model-validation-service.test.ts test/model-validation-http.test.ts",
+        "npm run typecheck"
+      ]
+    },
+    {
+      "id": "validation-production-reviewed-export-pipeline",
+      "title": "Production reviewed-export pipeline hardening",
+      "status": "done",
+      "completedAt": "2026-03-29T09:30:00Z",
+      "summary": "Reviewed-export refresh now carries manifest policy metadata, coverage failures, snapshot pruning, and deployment guidance for secure scheduled use.",
+      "acceptance": [
+        "Reviewed export refresh supports an ops-friendly production mode.",
+        "Integrity or coverage checks are recorded for refreshed datasets.",
+        "Docs explain how to run the scheduled export path safely outside local dev."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "id": "validation-external-observability",
+      "title": "External observability for model validation",
+      "status": "done",
+      "completedAt": "2026-03-29T09:30:00Z",
+      "summary": "Prometheus-facing reviewed-dataset and reviewed-export health gauges now complement validation drift metrics, and docs describe the required dashboards and alerts.",
+      "acceptance": [
+        "Validation counters and gauges are exported for external scraping.",
+        "Queue and transcript-length regressions are visible from metrics, not only the built-in UI.",
+        "Docs explain how to wire dashboards and alerts."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "id": "validation-real-tenant-shadowing",
+      "title": "Real tenant shadow-validation readiness",
+      "status": "done",
+      "completedAt": "2026-03-29T09:30:00Z",
+      "summary": "Nightly validation now deduplicates larger reviewed-export trees, enforces dataset readiness floors, and surfaces coverage/freshness gaps before reports run.",
+      "acceptance": [
+        "Nightly validation handles larger reviewed-export trees safely.",
+        "Coverage summaries make under-sampled queues and lengths obvious.",
+        "Docs spell out the production shadow-validation procedure."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test",
+        "npm run eval:sentiment:reviewed"
+      ]
+    },
+    {
+      "id": "security-retention-hardening",
+      "title": "Security and retention hardening",
+      "status": "done",
+      "completedAt": "2026-03-29T09:30:00Z",
+      "summary": "Reviewed-export retention, transcript-inclusion policy, classification metadata, and operator guidance are now configurable for self-hosted and embedded installs.",
+      "acceptance": [
+        "Retention behavior is configurable and documented.",
+        "Reviewed-export handling has explicit safety guidance.",
+        "Docs reflect the security posture for self-hosted installs."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "id": "e2e-benchmark-public-loop",
+      "title": "Public engagement benchmark loop",
+      "status": "done",
+      "completedAt": "2026-03-29T08:15:00Z",
+      "summary": "Run the isolated public call/email/ticket benchmark loop against local Ollama, persist baseline vs calibrated artifacts, add worst-record reporting, and document the current quality gaps.",
+      "acceptance": [
+        "The benchmark runner is exercised against the public engagement suite.",
+        "Artifacts make the worst engagement and queue gaps obvious.",
+        "Docs explain how to run the benchmark loop repeatedly during tuning."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test",
+        "npm run build:public-test-pipelines -- fixtures/public-data/pipeline-suite.json /tmp/conversation-intelligence-public-evals"
+      ]
+    },
+    {
+      "id": "e2e-benchmark-trial-matrix",
+      "title": "Benchmark trial-matrix stability loop",
+      "status": "completed",
+      "summary": "Completed on March 29, 2026: repeated isolated large-suite trials now emit best/median/worst artifacts, and the tuned local Ollama qwen3.5 loop is deterministic on score quality across three runs.",
+      "acceptance": [
+        "The loop can run multiple isolated benchmark trials into one artifact tree.",
+        "Aggregate artifacts report best, median, and worst calibrated runs.",
+        "Docs explain when to use repeated trials for provider-compatibility validation."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "id": "e2e-benchmark-reviewed-export-loop",
+      "title": "Reviewed export benchmark loop",
+      "status": "done",
+      "completedAt": "2026-03-29T09:30:00Z",
+      "summary": "A reviewed-export benchmark loop now builds suites from secure dataset trees, writes dataset summaries, and runs baseline vs calibrated loops in isolated or in-process mode.",
+      "acceptance": [
+        "The loop supports reviewed-export trees with transcripts and analyst labels.",
+        "Calibrated vs baseline comparisons are written for each run.",
+        "Operator guidance explains how to point the loop at secure reviewed datasets."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test",
+        "npm run eval:sentiment:reviewed"
+      ]
+    },
+    {
+      "id": "e2e-quality-gate-closure",
+      "title": "Engagement-specific quality gate closure",
+      "status": "completed",
+      "summary": "Completed on March 29, 2026 for the current public engagement suite: CALL, EMAIL, and TICKET slices now pass the large-suite quality gates locally with explicit loop artifacts and stable repeated-trial evidence.",
+      "acceptance": [
+        "Loop reports include pass/fail gate summaries for overall and engagement-specific slices.",
+        "Worst-performing engagement buckets are easy to identify from the report artifacts.",
+        "Docs state the current benchmark thresholds and how to interpret them."
+      ],
+      "verifyCommands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    }
+  ]
+}

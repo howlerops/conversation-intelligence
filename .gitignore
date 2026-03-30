@@ -1,7 +1,35 @@
+# OS files
 .DS_Store
 Thumbs.db
-node_modules
-dist
-coverage
+
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Docs build output
+site/.vitepress/cache/
+site/.vitepress/dist/
+
+# Local environment and secrets
 .env
-data
+.env.*
+!.env.example
+*.local
+
+# Local runtime data
+data/
+raw/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs and temp files
+*.log
+tmp/
+
+# Editor / local tool state
+.vscode/
+.idea/
+.claude/

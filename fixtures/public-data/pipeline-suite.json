@@ -1,0 +1,1018 @@
+{
+  "pipelines": [
+    {
+      "pipelineId": "support-call-taskmaster",
+      "tenantId": "public_eval",
+      "useCase": "support",
+      "dataset": "TASKMASTER",
+      "datasetTrack": "OPEN_CORE",
+      "engagementType": "CALL",
+      "description": "Open-core support-call eval slice patterned after Taskmaster-style role-annotated dialogue.",
+      "notes": [
+        "Matches the playbook's call-oriented public-data path for role resolution and workflow phrasing.",
+        "Use for call-style support regressions before tenant traffic shadowing."
+      ],
+      "records": [
+        {
+          "recordId": "taskmaster-support-001",
+          "conversationId": "tm_support_001",
+          "participants": [
+            {
+              "speakerId": "customer_1",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "phone"
+              }
+            },
+            {
+              "speakerId": "agent_1",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "phone"
+              }
+            }
+          ],
+          "turns": [
+            {
+              "turnId": "t1",
+              "speakerId": "customer_1",
+              "text": "You told me this replacement would be here yesterday and nothing has arrived.",
+              "startedAt": "2026-03-28T09:00:00.000Z",
+              "metadata": {}
+            },
+            {
+              "turnId": "t2",
+              "speakerId": "agent_1",
+              "text": "I can see the shipment is still pending and I can escalate it now.",
+              "startedAt": "2026-03-28T09:00:10.000Z",
+              "metadata": {}
+            },
+            {
+              "turnId": "t3",
+              "speakerId": "customer_1",
+              "text": "Please do, because this is the second time I have had to call.",
+              "startedAt": "2026-03-28T09:00:20.000Z",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.74,
+              "confidence": 0.94,
+              "rationale": "Customer reports a missed commitment and repeated-contact frustration.",
+              "analystScore100": 18,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z",
+              "note": "Missed promise plus repeat-contact signal should remain strongly negative."
+            },
+            "canonicalEvents": [
+              "PROMISE_BROKEN",
+              "REPEAT_CONTACT_SIGNAL",
+              "ESCALATION_REQUEST"
+            ],
+            "tags": [
+              "support",
+              "call",
+              "workflow_rich"
+            ],
+            "category": "support_missed_commitment"
+          },
+          "metadata": {
+            "sourceCorpus": "taskmaster"
+          }
+        },
+        {
+          "recordId": "taskmaster-support-002",
+          "conversationId": "tm_support_002",
+          "participants": [
+            {
+              "speakerId": "customer_2",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "phone"
+              }
+            },
+            {
+              "speakerId": "agent_2",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "phone"
+              }
+            }
+          ],
+          "turns": [
+            {
+              "turnId": "t1",
+              "speakerId": "customer_2",
+              "text": "Thanks for getting the billing issue fixed while I was on the line.",
+              "startedAt": "2026-03-28T09:05:00.000Z",
+              "metadata": {}
+            },
+            {
+              "turnId": "t2",
+              "speakerId": "agent_2",
+              "text": "Happy to help. I have emailed the confirmation as well.",
+              "startedAt": "2026-03-28T09:05:10.000Z",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "POSITIVE",
+              "intensity": 0.61,
+              "confidence": 0.91,
+              "rationale": "Customer confirms the issue is resolved and expresses appreciation.",
+              "analystScore100": 81,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "RESOLUTION_COMMITMENT"
+            ],
+            "tags": [
+              "support",
+              "call",
+              "resolved"
+            ],
+            "category": "support_positive_resolution"
+          },
+          "metadata": {
+            "sourceCorpus": "taskmaster"
+          }
+        }
+      ]
+    },
+    {
+      "pipelineId": "support-ticket-abcd",
+      "tenantId": "public_eval",
+      "useCase": "support",
+      "dataset": "ABCD",
+      "datasetTrack": "OPEN_CORE",
+      "engagementType": "TICKET",
+      "description": "Open-core support-ticket eval slice for asynchronous workflow and internal-note contamination.",
+      "notes": [
+        "Matches the playbook's workflow-rich customer-service dialogue recommendation.",
+        "Covers ticket threads and internal-note contamination that often breaks role-aware scoring."
+      ],
+      "records": [
+        {
+          "recordId": "abcd-ticket-001",
+          "ticketId": "ticket_1001",
+          "title": "Refund promised but still pending",
+          "participants": [
+            {
+              "speakerId": "requester_1",
+              "displayName": "Requester",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "agent_1",
+              "displayName": "Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "note_1",
+              "displayName": "Internal Note",
+              "rawRoleLabel": "internal note",
+              "metadata": {
+                "channel": "ticket",
+                "kind": "internal"
+              }
+            }
+          ],
+          "comments": [
+            {
+              "commentId": "c1",
+              "authorId": "requester_1",
+              "bodyText": "The refund was supposed to post on Monday and it still has not happened.",
+              "createdAt": "2026-03-28T10:00:00.000Z",
+              "metadata": {}
+            },
+            {
+              "commentId": "c2",
+              "authorId": "note_1",
+              "bodyText": "Customer sounds upset. Route to supervisor queue if needed.",
+              "createdAt": "2026-03-28T10:05:00.000Z",
+              "isInternalNote": true,
+              "metadata": {}
+            },
+            {
+              "commentId": "c3",
+              "authorId": "agent_1",
+              "bodyText": "I have escalated this to billing and will update you today.",
+              "createdAt": "2026-03-28T10:10:00.000Z",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.68,
+              "confidence": 0.92,
+              "rationale": "The customer is frustrated by the missed refund timeline.",
+              "analystScore100": 24,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z",
+              "note": "Internal notes exist for contamination checks but the sentiment target is still the requester."
+            },
+            "canonicalEvents": [
+              "PROMISE_BROKEN",
+              "ESCALATION_REQUEST"
+            ],
+            "tags": [
+              "support",
+              "ticket",
+              "internal_note_contamination"
+            ],
+            "category": "support_ticket_refund_delay"
+          },
+          "metadata": {
+            "sourceCorpus": "abcd"
+          }
+        },
+        {
+          "recordId": "abcd-ticket-002",
+          "ticketId": "ticket_1002",
+          "title": "Replacement label still missing",
+          "participants": [
+            {
+              "speakerId": "requester_2",
+              "displayName": "Requester",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "agent_2",
+              "displayName": "Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "ticket"
+              }
+            }
+          ],
+          "comments": [
+            {
+              "commentId": "c1",
+              "authorId": "requester_2",
+              "bodyText": "I was told the return label would be attached yesterday, and the message came through without any file.",
+              "createdAt": "2026-03-28T10:20:00.000Z",
+              "metadata": {}
+            },
+            {
+              "commentId": "c2",
+              "authorId": "agent_2",
+              "bodyText": "I resent the label and escalated the attachment issue to the shipping team.",
+              "createdAt": "2026-03-28T10:32:00.000Z",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.51,
+              "confidence": 0.9,
+              "rationale": "The customer reports another missed operational commitment and needs a corrected attachment.",
+              "analystScore100": 31,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "PROMISE_BROKEN",
+              "DOCUMENT_BLOCKER"
+            ],
+            "tags": [
+              "support",
+              "ticket",
+              "attachment_failure"
+            ],
+            "category": "support_ticket_label_missing"
+          },
+          "metadata": {
+            "sourceCorpus": "abcd"
+          }
+        },
+        {
+          "recordId": "abcd-ticket-003",
+          "ticketId": "ticket_1003",
+          "title": "Installation steps are still missing after three replies",
+          "participants": [
+            {
+              "speakerId": "requester_3",
+              "displayName": "Requester",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "agent_3",
+              "displayName": "Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "ticket"
+              }
+            }
+          ],
+          "comments": [
+            {
+              "commentId": "c1",
+              "authorId": "requester_3",
+              "bodyText": "I have now replied three times because the setup article does not match the product in the box and the screenshots in the portal point to menus that are not on my account. configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration configuration",
+              "createdAt": "2026-03-28T10:40:00.000Z",
+              "metadata": {}
+            },
+            {
+              "commentId": "c2",
+              "authorId": "agent_3",
+              "bodyText": "I rebuilt the steps for your account tier, attached the updated screenshots, and asked onboarding to verify the sequence.",
+              "createdAt": "2026-03-28T10:58:00.000Z",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.49,
+              "confidence": 0.88,
+              "rationale": "The requester is frustrated by repeated async back-and-forth and incorrect documentation, but the tone is not as severe as a broken refund promise.",
+              "analystScore100": 36,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "REPEAT_CONTACT_SIGNAL",
+              "DOCUMENT_BLOCKER"
+            ],
+            "tags": [
+              "support",
+              "ticket",
+              "documentation_gap",
+              "medium_length"
+            ],
+            "category": "support_ticket_setup_instructions_mismatch"
+          },
+          "metadata": {
+            "sourceCorpus": "abcd"
+          }
+        },
+        {
+          "recordId": "abcd-ticket-004",
+          "ticketId": "ticket_1004",
+          "title": "Multi-day outage case with mixed internal notes",
+          "participants": [
+            {
+              "speakerId": "requester_4",
+              "displayName": "Requester",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "agent_4",
+              "displayName": "Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "ticket"
+              }
+            },
+            {
+              "speakerId": "note_4",
+              "displayName": "Internal Note",
+              "rawRoleLabel": "internal note",
+              "metadata": {
+                "channel": "ticket",
+                "kind": "internal"
+              }
+            }
+          ],
+          "comments": [
+            {
+              "commentId": "c1",
+              "authorId": "requester_4",
+              "bodyText": "This outage has been going on since Saturday, every update says the next maintenance window will fix it, and I am still manually rebuilding the same report pack for leadership every morning before seven. outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage outage",
+              "createdAt": "2026-03-28T11:05:00.000Z",
+              "metadata": {}
+            },
+            {
+              "commentId": "c2",
+              "authorId": "note_4",
+              "bodyText": "Internal note: keep engineering on bridge until the export queue stabilizes.",
+              "createdAt": "2026-03-28T11:12:00.000Z",
+              "isInternalNote": true,
+              "metadata": {}
+            },
+            {
+              "commentId": "c3",
+              "authorId": "agent_4",
+              "bodyText": "I escalated this as a priority incident, attached the partial workaround, and committed to send the next update in two hours.",
+              "createdAt": "2026-03-28T11:18:00.000Z",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.77,
+              "confidence": 0.93,
+              "rationale": "The requester describes a prolonged outage, repeated broken expectations, and significant manual workarounds.",
+              "analystScore100": 14,
+              "reviewedBy": "public_annotator",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "PROMISE_BROKEN",
+              "ESCALATION_REQUEST",
+              "REPEAT_CONTACT_SIGNAL"
+            ],
+            "tags": [
+              "support",
+              "ticket",
+              "outage",
+              "long_length"
+            ],
+            "category": "support_ticket_prolonged_outage"
+          },
+          "metadata": {
+            "sourceCorpus": "abcd"
+          }
+        }
+      ]
+    },
+    {
+      "pipelineId": "support-email-synthetic",
+      "tenantId": "public_eval",
+      "useCase": "support",
+      "dataset": "SYNTHETIC_TEMPLATE",
+      "datasetTrack": "SYNTHETIC",
+      "engagementType": "EMAIL",
+      "description": "Synthetic support-email slice for async follow-up, refund friction, and appreciative resolution messaging.",
+      "notes": [
+        "Covers support email flows that the original spec expected but did not map to a commercial-friendly public corpus.",
+        "Use for shadow comparisons where async email support behaves differently from collections email."
+      ],
+      "records": [
+        {
+          "recordId": "support-email-001",
+          "threadId": "support_email_001",
+          "subject": "Still waiting on replacement tracking",
+          "participants": [
+            {
+              "speakerId": "customer_3",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "agent_3",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "customer_3",
+              "sentAt": "2026-03-28T10:45:00.000Z",
+              "bodyText": "You confirmed the replacement shipped on Monday, but I still do not have tracking and the portal shows nothing.",
+              "metadata": {
+                "queue": "support_email"
+              }
+            },
+            {
+              "messageId": "m2",
+              "senderId": "agent_3",
+              "sentAt": "2026-03-28T11:15:00.000Z",
+              "bodyText": "I checked with fulfillment and opened a follow-up because the shipment confirmation did not generate a carrier scan.",
+              "metadata": {
+                "queue": "support_email"
+              }
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.57,
+              "confidence": 0.9,
+              "rationale": "The customer is frustrated by a missed shipment confirmation and missing tracking data.",
+              "analystScore100": 27,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "PROMISE_BROKEN",
+              "DOCUMENT_BLOCKER"
+            ],
+            "tags": [
+              "support",
+              "email",
+              "shipment_follow_up"
+            ],
+            "category": "support_email_missing_tracking"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template",
+            "queue": "support_email"
+          }
+        },
+        {
+          "recordId": "support-email-002",
+          "threadId": "support_email_002",
+          "subject": "Refund received, thank you",
+          "participants": [
+            {
+              "speakerId": "customer_4",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "agent_4",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "customer_4",
+              "sentAt": "2026-03-28T11:05:00.000Z",
+              "bodyText": "The refund posted this morning. Thanks for staying on it and keeping me updated the last few days.",
+              "metadata": {
+                "queue": "support_email"
+              }
+            },
+            {
+              "messageId": "m2",
+              "senderId": "agent_4",
+              "sentAt": "2026-03-28T11:20:00.000Z",
+              "bodyText": "Glad to hear it. I have closed the case, but reply if anything else looks off on the account.",
+              "metadata": {
+                "queue": "support_email"
+              }
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "POSITIVE",
+              "intensity": 0.47,
+              "confidence": 0.88,
+              "rationale": "The customer confirms resolution and expresses appreciation for the follow-up.",
+              "analystScore100": 73,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "RESOLUTION_COMMITMENT"
+            ],
+            "tags": [
+              "support",
+              "email",
+              "resolved"
+            ],
+            "category": "support_email_refund_resolved"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template",
+            "queue": "support_email"
+          }
+        },
+        {
+          "recordId": "support-email-003",
+          "threadId": "support_email_003",
+          "subject": "Wrong replacement part arrived again",
+          "participants": [
+            {
+              "speakerId": "customer_5",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "agent_5",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "customer_5",
+              "sentAt": "2026-03-28T11:25:00.000Z",
+              "bodyText": "The second replacement is the same incorrect model as the first one, and I am now past the date when this was supposed to be resolved for our launch checklist. replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement replacement",
+              "metadata": {
+                "queue": "support_email"
+              }
+            },
+            {
+              "messageId": "m2",
+              "senderId": "agent_5",
+              "sentAt": "2026-03-28T11:42:00.000Z",
+              "bodyText": "I created a supervisor review, attached the photo comparison to the case, and blocked the warehouse from shipping the same SKU again.",
+              "metadata": {
+                "queue": "support_email"
+              }
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.69,
+              "confidence": 0.91,
+              "rationale": "The customer reports repeat failure and a missed business deadline, producing stronger negative sentiment than a routine follow-up.",
+              "analystScore100": 19,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "PROMISE_BROKEN",
+              "REPEAT_CONTACT_SIGNAL",
+              "ESCALATION_REQUEST"
+            ],
+            "tags": [
+              "support",
+              "email",
+              "replacement_failure",
+              "medium_length"
+            ],
+            "category": "support_email_repeated_wrong_part"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template",
+            "queue": "support_email"
+          }
+        },
+        {
+          "recordId": "support-email-004",
+          "threadId": "support_email_004",
+          "subject": "Outage summary and next update request",
+          "participants": [
+            {
+              "speakerId": "customer_6",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "agent_6",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "customer_6",
+              "sentAt": "2026-03-28T11:48:00.000Z",
+              "bodyText": "I am forwarding the outage timeline because each promised update window has passed without a concrete root-cause note, and the leadership team is now asking for written confirmation of what failed, what is fixed, and what remains unstable before we can reopen the service externally. timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline timeline",
+              "metadata": {
+                "queue": "support_email"
+              }
+            },
+            {
+              "messageId": "m2",
+              "senderId": "agent_6",
+              "sentAt": "2026-03-28T12:05:00.000Z",
+              "bodyText": "I escalated this to incident command, attached the current mitigation notes, and set the next written update for 2 PM local time.",
+              "metadata": {
+                "queue": "support_email"
+              }
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.72,
+              "confidence": 0.92,
+              "rationale": "The customer is pressing for executive-grade outage accountability after multiple missed update windows.",
+              "analystScore100": 17,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "PROMISE_BROKEN",
+              "ESCALATION_REQUEST"
+            ],
+            "tags": [
+              "support",
+              "email",
+              "outage",
+              "long_length"
+            ],
+            "category": "support_email_outage_update_gap"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template",
+            "queue": "support_email"
+          }
+        },
+        {
+          "recordId": "support-email-005",
+          "threadId": "support_email_005",
+          "subject": "Configuration issue resolved after detailed follow-up",
+          "participants": [
+            {
+              "speakerId": "customer_7",
+              "displayName": "Customer",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "agent_7",
+              "displayName": "Support Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "customer_7",
+              "sentAt": "2026-03-28T12:10:00.000Z",
+              "bodyText": "Your step-by-step follow-up finally matched our environment, the import completed cleanly, and I wanted to acknowledge that the detailed screenshots were the piece that made the difference for the team. resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved resolved",
+              "metadata": {
+                "queue": "support_email"
+              }
+            },
+            {
+              "messageId": "m2",
+              "senderId": "agent_7",
+              "sentAt": "2026-03-28T12:18:00.000Z",
+              "bodyText": "Thank you for confirming. I documented the corrected flow so the next customer on this path gets the right instructions immediately.",
+              "metadata": {
+                "queue": "support_email"
+              }
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "POSITIVE",
+              "intensity": 0.58,
+              "confidence": 0.9,
+              "rationale": "The customer explicitly confirms resolution and appreciates the detailed follow-up.",
+              "analystScore100": 79,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "RESOLUTION_COMMITMENT"
+            ],
+            "tags": [
+              "support",
+              "email",
+              "resolved",
+              "medium_length"
+            ],
+            "category": "support_email_configuration_resolved"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template",
+            "queue": "support_email"
+          }
+        }
+      ]
+    },
+    {
+      "pipelineId": "collections-email-synthetic",
+      "tenantId": "public_eval",
+      "useCase": "collections",
+      "dataset": "SYNTHETIC_TEMPLATE",
+      "datasetTrack": "SYNTHETIC",
+      "engagementType": "EMAIL",
+      "description": "Synthetic collections-email eval slice because the original spec does not name a commercial-friendly public email corpus.",
+      "notes": [
+        "Follows the playbook's synthetic-data strategy for support, sales, collections, and claims.",
+        "Use until a licensed public email-thread corpus is selected for open-core packaging."
+      ],
+      "records": [
+        {
+          "recordId": "collections-email-001",
+          "threadId": "email_thread_9001",
+          "subject": "Payment arrangement for account 3342",
+          "participants": [
+            {
+              "speakerId": "borrower_1",
+              "displayName": "Borrower",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "collector_1",
+              "displayName": "Collections Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "borrower_1",
+              "sentAt": "2026-03-28T11:00:00.000Z",
+              "bodyText": "I lost work last month and cannot make the full payment, but I can send 150 dollars on Friday.",
+              "metadata": {}
+            },
+            {
+              "messageId": "m2",
+              "senderId": "collector_1",
+              "sentAt": "2026-03-28T11:30:00.000Z",
+              "bodyText": "Thank you. I can note the hardship and document the Friday commitment.",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.49,
+              "confidence": 0.9,
+              "rationale": "The borrower discloses hardship but also makes a concrete promise to pay.",
+              "analystScore100": 33,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z",
+              "note": "Collections email should capture both hardship and commitment without treating the agent reply as the user signal."
+            },
+            "canonicalEvents": [
+              "HARDSHIP_SIGNAL",
+              "PROMISE_TO_PAY"
+            ],
+            "tags": [
+              "collections",
+              "email",
+              "synthetic"
+            ],
+            "category": "collections_hardship_email"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template"
+          }
+        },
+        {
+          "recordId": "collections-email-002",
+          "threadId": "email_thread_9002",
+          "subject": "Late fee dispute on hardship plan",
+          "participants": [
+            {
+              "speakerId": "borrower_2",
+              "displayName": "Borrower",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "collector_2",
+              "displayName": "Collections Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "borrower_2",
+              "sentAt": "2026-03-28T11:45:00.000Z",
+              "bodyText": "I agreed to the hardship plan, but the late fee still posted and I cannot keep paying extra charges every week.",
+              "metadata": {}
+            },
+            {
+              "messageId": "m2",
+              "senderId": "collector_2",
+              "sentAt": "2026-03-28T12:10:00.000Z",
+              "bodyText": "I am reviewing the fee and will reply once I confirm whether it should be waived.",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "NEGATIVE",
+              "intensity": 0.62,
+              "confidence": 0.89,
+              "rationale": "The borrower disputes a fee while signaling repeated hardship pressure.",
+              "analystScore100": 26,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "HARDSHIP_SIGNAL",
+              "POLICY_CONFLICT"
+            ],
+            "tags": [
+              "collections",
+              "email",
+              "synthetic"
+            ],
+            "category": "collections_fee_dispute_email"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template"
+          }
+        },
+        {
+          "recordId": "collections-email-003",
+          "threadId": "email_thread_9003",
+          "subject": "Arrangement confirmed for next payment",
+          "participants": [
+            {
+              "speakerId": "borrower_3",
+              "displayName": "Borrower",
+              "rawRoleLabel": "customer",
+              "metadata": {
+                "channel": "email"
+              }
+            },
+            {
+              "speakerId": "collector_3",
+              "displayName": "Collections Agent",
+              "rawRoleLabel": "agent",
+              "metadata": {
+                "channel": "email"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "messageId": "m1",
+              "senderId": "borrower_3",
+              "sentAt": "2026-03-28T12:20:00.000Z",
+              "bodyText": "Thank you for confirming the new date. I can make the revised payment on Tuesday and appreciate the flexibility.",
+              "metadata": {}
+            },
+            {
+              "messageId": "m2",
+              "senderId": "collector_3",
+              "sentAt": "2026-03-28T12:35:00.000Z",
+              "bodyText": "Confirmed. I have updated the plan and will send a receipt after the payment posts.",
+              "metadata": {}
+            }
+          ],
+          "labels": {
+            "overallSentiment": {
+              "polarity": "POSITIVE",
+              "intensity": 0.43,
+              "confidence": 0.88,
+              "rationale": "The borrower acknowledges the arrangement and expresses appreciation for the confirmed plan.",
+              "analystScore100": 72,
+              "reviewedBy": "synthetic_reviewer",
+              "reviewedAt": "2026-03-28T00:00:00.000Z"
+            },
+            "canonicalEvents": [
+              "PROMISE_TO_PAY",
+              "RESOLUTION_COMMITMENT"
+            ],
+            "tags": [
+              "collections",
+              "email",
+              "synthetic"
+            ],
+            "category": "collections_plan_confirmed_email"
+          },
+          "metadata": {
+            "sourceCorpus": "synthetic_template"
+          }
+        }
+      ]
+    }
+  ]
+}

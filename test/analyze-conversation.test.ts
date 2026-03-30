@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   analyzeConversation,
-  StubCanonicalAnalysisEngine,
 } from '../src';
+import { StubCanonicalAnalysisEngine } from '../src/rlm/engine';
 import { canonicalExtractionSchema } from '../src/contracts/analysis';
 import { TenantPackDraft, TranscriptInputDraft } from '../src/contracts';
 import transcriptFixture from '../fixtures/transcript.support.basic.json';
@@ -74,6 +74,8 @@ describe('analyzeConversation', () => {
       review: {
         state: 'VERIFIED',
         reasons: [],
+        comments: [],
+        history: [],
       },
     }));
 
@@ -119,6 +121,8 @@ describe('analyzeConversation', () => {
       review: {
         state: 'VERIFIED',
         reasons: [],
+        comments: [],
+        history: [],
       },
     }));
 
@@ -134,5 +138,74 @@ describe('analyzeConversation', () => {
 
     expect(result.review.state).toBe('NEEDS_REVIEW');
     expect(result.review.reasons.join(' ')).toContain('ineligible role AGENT');
+  });
+
+  it('uses participant rawRoleLabel to avoid unnecessary review on async engagement fixtures', async () => {
+    const engine = new StubCanonicalAnalysisEngine(canonicalExtractionSchema.parse({
+      overallEndUserSentiment: {
+        polarity: 'NEGATIVE',
+        intensity: 0.6,
+        confidence: 0.9,
+        rationale: 'Customer is still waiting on a shipment update.',
+      },
+      aspectSentiments: [],
+      canonicalEvents: [],
+      canonicalKeyMoments: [],
+      summary: 'Customer is frustrated by missing shipment tracking.',
+      review: {
+        state: 'VERIFIED',
+        reasons: [],
+        comments: [],
+        history: [],
+      },
+    }));
+
+    const result = await analyzeConversation(
+      {
+        tenantId: 'tenant_acme',
+        conversationId: 'email-role-label-001',
+        useCase: 'support',
+        participants: [
+          {
+            speakerId: 'customer_1',
+            displayName: 'Customer',
+            rawRoleLabel: 'customer',
+            metadata: { channel: 'email' },
+          },
+          {
+            speakerId: 'agent_1',
+            displayName: 'Support Agent',
+            rawRoleLabel: 'agent',
+            metadata: { channel: 'email' },
+          },
+        ],
+        turns: [
+          {
+            turnId: 't1',
+            speakerId: 'customer_1',
+            text: 'Still waiting on the replacement tracking.',
+          },
+          {
+            turnId: 't2',
+            speakerId: 'agent_1',
+            text: 'I am checking with fulfillment now.',
+          },
+        ],
+        metadata: {
+          engagementType: 'EMAIL',
+          queue: 'support_email',
+        },
+      } as TranscriptInputDraft,
+      tenantPackFixture as TenantPackDraft,
+      {
+        engine,
+        jobId: 'job_test_raw_role_label',
+        now: new Date('2026-03-28T00:00:00.000Z'),
+      },
+    );
+
+    expect(result.speakerAssignments.map((assignment) => assignment.role)).toEqual(['END_USER', 'AGENT']);
+    expect(result.speakerSummary.confidence).toBeGreaterThan(0.9);
+    expect(result.review.state).toBe('VERIFIED');
   });
 });

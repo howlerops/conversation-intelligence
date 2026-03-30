@@ -1,0 +1,125 @@
+{
+  "generatedAt": "2026-03-30T12:40:36.054Z",
+  "totalRecords": 142,
+  "publicRecords": 17,
+  "syntheticRecords": 125,
+  "completed": 15,
+  "skipped": 125,
+  "errors": 2,
+  "averageDeltaScore100": 4.07,
+  "averageDeltaScore5": 0.07,
+  "withinFivePointsRate": 0.8667,
+  "exactScore5MatchRate": 0.9333,
+  "polarityMatchRate": 0.8,
+  "keyMomentMacroPrecision": 0.5222,
+  "keyMomentMacroRecall": 0.4333,
+  "keyMomentMacroF1": 0.4736,
+  "averageEvidenceFidelity": 1,
+  "byEngagementType": {
+    "CALL": {
+      "total": 36,
+      "completed": 2,
+      "averageDeltaScore100": 1,
+      "withinFivePointsRate": 1,
+      "polarityMatchRate": 1
+    },
+    "TICKET": {
+      "total": 36,
+      "completed": 6,
+      "averageDeltaScore100": 2.83,
+      "withinFivePointsRate": 0.8333,
+      "polarityMatchRate": 0.6667
+    },
+    "EMAIL": {
+      "total": 41,
+      "completed": 7,
+      "averageDeltaScore100": 6,
+      "withinFivePointsRate": 0.8571,
+      "polarityMatchRate": 0.8571
+    },
+    "CHAT": {
+      "total": 29,
+      "completed": 0
+    }
+  },
+  "worstRecords": [
+    {
+      "recordId": "public-synthetic_template-collections-email-003",
+      "engagementType": "EMAIL",
+      "deltaScore100": 25,
+      "reason": "Polarity mismatch: model=NEUTRAL, analyst=POSITIVE"
+    },
+    {
+      "recordId": "public-abcd-abcd-ticket-003",
+      "engagementType": "TICKET",
+      "deltaScore100": 6,
+      "reason": "Polarity mismatch: model=NEGATIVE, analyst=NEUTRAL"
+    },
+    {
+      "recordId": "public-synthetic_template-support-email-001",
+      "engagementType": "EMAIL",
+      "deltaScore100": 5,
+      "reason": "Score delta: 5 points"
+    },
+    {
+      "recordId": "public-synthetic_template-collections-email-001",
+      "engagementType": "EMAIL",
+      "deltaScore100": 5,
+      "reason": "Score delta: 5 points"
+    },
+    {
+      "recordId": "public-abcd-abcd-ticket-004",
+      "engagementType": "TICKET",
+      "deltaScore100": 4,
+      "reason": "Polarity mismatch: model=NEGATIVE, analyst=VERY_NEGATIVE"
+    },
+    {
+      "recordId": "public-synthetic_template-collections-email-002",
+      "engagementType": "EMAIL",
+      "deltaScore100": 4,
+      "reason": "Score delta: 4 points"
+    },
+    {
+      "recordId": "public-abcd-abcd-ticket-002",
+      "engagementType": "TICKET",
+      "deltaScore100": 3,
+      "reason": "Score delta: 3 points"
+    },
+    {
+      "recordId": "public-multidoc2dial-multidoc-ticket-001",
+      "engagementType": "TICKET",
+      "deltaScore100": 2,
+      "reason": "Score delta: 2 points"
+    },
+    {
+      "recordId": "public-callcenteren-callcenteren-support-001",
+      "engagementType": "CALL",
+      "deltaScore100": 2,
+      "reason": "Score delta: 2 points"
+    },
+    {
+      "recordId": "public-abcd-abcd-ticket-001",
+      "engagementType": "TICKET",
+      "deltaScore100": 1,
+      "reason": "Score delta: 1 points"
+    }
+  ],
+  "diagnostics": [
+    {
+      "severity": "HIGH",
+      "category": "Key moment detection gap",
+      "description": "Key moment recall is 43% — model is missing more than half of expected key moments.",
+      "affectedRecordCount": 6,
+      "metric": "key_moment_macro_recall",
+      "metricValue": 0.4333
+    },
+    {
+      "severity": "MEDIUM",
+      "category": "EMAIL performance gap",
+      "description": "EMAIL has 5.0pt higher average delta than CALL — may indicate engagement-type-specific calibration needed.",
+      "affectedRecordCount": 7,
+      "metric": "engagement_type_delta_gap",
+      "metricValue": 5
+    }
+  ]
+}

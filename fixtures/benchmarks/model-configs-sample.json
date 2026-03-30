@@ -1,0 +1,21 @@
+[
+  {
+    "modelId": "gpt-4o",
+    "modelName": "GPT-4o",
+    "provider": "openai",
+    "model": "gpt-4o"
+  },
+  {
+    "modelId": "claude-sonnet",
+    "modelName": "Claude Sonnet 4",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "modelId": "llama-3-70b",
+    "modelName": "Llama 3 70B",
+    "provider": "ollama",
+    "model": "llama3:70b",
+    "apiBase": "http://localhost:11434/v1"
+  }
+]

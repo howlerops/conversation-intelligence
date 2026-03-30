@@ -1,0 +1,10 @@
+[
+  {
+    "severity": "HIGH",
+    "category": "Key moment detection gap",
+    "description": "Key moment recall is 46% — model is missing more than half of expected key moments.",
+    "affectedRecordCount": 4,
+    "metric": "key_moment_macro_recall",
+    "metricValue": 0.4615
+  }
+]

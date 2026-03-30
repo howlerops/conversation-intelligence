@@ -52,6 +52,29 @@ function inferRoleFromMetadata(kind?: unknown): RoleInference | null {
   return null;
 }
 
+function inferRoleFromRawRoleLabel(rawRoleLabel?: unknown): RoleInference | null {
+  if (typeof rawRoleLabel !== 'string') {
+    return null;
+  }
+
+  const normalized = rawRoleLabel.trim().toLowerCase();
+  if (!normalized) {
+    return null;
+  }
+
+  for (const [role, keywords] of ROLE_KEYWORDS) {
+    if (keywords.some((keyword) => normalized === keyword || normalized.includes(keyword))) {
+      return {
+        role,
+        confidence: role === 'END_USER' || role === 'AGENT' ? 0.96 : 0.93,
+        provenance: [`participant.rawRoleLabel=${normalized}`],
+      };
+    }
+  }
+
+  return null;
+}
+
 function inferRoleFromAliases(turn: NormalizedTurn, pack: TenantPack): RoleInference | null {
   const aliasCandidates = [
     turn.normalizedDisplayName,
@@ -117,6 +140,7 @@ function inferRole(turn: NormalizedTurn, transcript: NormalizedTranscript, pack:
     inferRoleFromSpeakerId(turn, pack),
     inferRoleFromMarkers(turn),
     inferRoleFromMetadata(participant?.metadata.kind),
+    inferRoleFromRawRoleLabel(participant?.rawRoleLabel),
     inferRoleFromAliases(turn, pack),
     inferRoleFromName(turn),
   ];

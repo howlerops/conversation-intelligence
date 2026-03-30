@@ -1,0 +1,10 @@
+{
+  "sources": [
+    {
+      "sourceId": "public-support-benchmark",
+      "kind": "public_pipeline_suite",
+      "path": "../public-data/pipeline-suite.json",
+      "tenantPackPath": "../tenant-pack.support.acme.json"
+    }
+  ]
+}
