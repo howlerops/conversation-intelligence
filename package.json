@@ -42,7 +42,7 @@
     "@anthropic-ai/sdk": "^0.80.0",
     "better-sqlite3": "^11.10.0",
     "pg": "^8.16.3",
-    "recursive-llm-ts": "file:../recursive-llm-ts",
+    "recursive-llm-ts": "git+https://github.com/howlerops/recursive-llm-ts.git",
     "zod": "^4.3.6"
   },
   "devDependencies": {

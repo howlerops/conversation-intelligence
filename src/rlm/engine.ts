@@ -1,5 +1,22 @@
-import { RLM, type RLMEventMap, type RLMEventType } from 'recursive-llm-ts';
 import { z } from 'zod';
+
+// Minimal local types for the recursive-llm-ts RLM interface.
+// The actual class is loaded lazily via require() at runtime — only when structured mode is used.
+// This avoids a compile-time dependency on the unbuilt dist/ in the git-installed package.
+type RLMEventType = string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RLMEventMap = Record<RLMEventType, any>;
+
+interface RlmInstance {
+  structuredCompletion(
+    query: string,
+    context: string,
+    schema: unknown,
+    options: { maxRetries: number; parallelExecution: boolean; signal?: AbortSignal },
+  ): Promise<{ result: z.infer<typeof llmExtractionSchema> }>;
+  on(event: string, listener: (data: unknown) => void): void;
+  off(event: string, listener: (data: unknown) => void): void;
+}
 import {
   aspectSentimentSchema,
   CanonicalExtraction,
@@ -81,7 +98,10 @@ const llmExtractionSchema = z.object({
 });
 
 export class RlmCanonicalAnalysisEngine implements CanonicalAnalysisEngine {
-  private readonly rlm: RLM;
+  // Lazy — only created when structured mode is first used. This avoids requiring
+  // the recursive-llm-ts dist/ at construction time (e.g., when using ollama_json_compat).
+  private rlm: RlmInstance | undefined;
+  private readonly rlmConfig: RlmConversationEngineConfig;
   private readonly model: string;
   private readonly apiBase?: string;
   private readonly apiKey?: string;
@@ -94,6 +114,7 @@ export class RlmCanonicalAnalysisEngine implements CanonicalAnalysisEngine {
   private readonly parallelExecution: boolean;
 
   constructor(config: RlmConversationEngineConfig) {
+    this.rlmConfig = config;
     this.model = config.model;
     this.apiBase = config.apiBase;
     this.apiKey = config.apiKey ?? process.env.OPENAI_API_KEY ?? '';
@@ -104,29 +125,38 @@ export class RlmCanonicalAnalysisEngine implements CanonicalAnalysisEngine {
     this.requestTimeoutMs = config.requestTimeoutMs;
     this.structuredMaxRetries = config.structuredMaxRetries ?? 3;
     this.parallelExecution = config.parallelExecution ?? true;
-    this.rlm = new RLM(config.model, {
-      api_key: this.apiKey,
-      api_base: config.apiBase,
-      recursive_model: config.recursiveModel,
-      max_depth: config.maxDepth ?? 2,
-      max_iterations: config.maxIterations ?? 12,
-      max_tokens: config.maxTokens,
-      timeout: config.timeoutSeconds,
-      temperature: config.temperature ?? 0,
-      go_binary_path: config.goBinaryPath,
-      debug: config.debug,
-      observability: config.debug || config.logOutput
-        ? {
-          debug: true,
-          log_output: config.logOutput ?? 'stderr',
-        }
-        : undefined,
-      ...(config.extraParams ?? {}),
-      context_overflow: {
-        enabled: true,
-        strategy: 'refine',
-      },
-    });
+  }
+
+  private getRlm(): RlmInstance {
+    if (!this.rlm) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { RLM } = require('recursive-llm-ts') as { RLM: new (model: string, config: Record<string, unknown>) => RlmInstance };
+      const config = this.rlmConfig;
+      this.rlm = new RLM(config.model, {
+        api_key: this.apiKey,
+        api_base: config.apiBase,
+        recursive_model: config.recursiveModel,
+        max_depth: config.maxDepth ?? 2,
+        max_iterations: config.maxIterations ?? 12,
+        max_tokens: config.maxTokens,
+        timeout: config.timeoutSeconds,
+        temperature: config.temperature ?? 0,
+        go_binary_path: config.goBinaryPath,
+        debug: config.debug,
+        observability: config.debug || config.logOutput
+          ? {
+            debug: true,
+            log_output: config.logOutput ?? 'stderr',
+          }
+          : undefined,
+        ...(config.extraParams ?? {}),
+        context_overflow: {
+          enabled: true,
+          strategy: 'refine',
+        },
+      });
+    }
+    return this.rlm;
   }
 
   async analyze(input: CanonicalAnalysisRequest): Promise<CanonicalAnalysisEngineResult> {
@@ -141,7 +171,7 @@ export class RlmCanonicalAnalysisEngine implements CanonicalAnalysisEngine {
         };
       }
 
-      const result = await this.rlm.structuredCompletion(
+      const result = await this.getRlm().structuredCompletion(
         input.query,
         input.context,
         llmExtractionSchema,
@@ -168,12 +198,12 @@ export class RlmCanonicalAnalysisEngine implements CanonicalAnalysisEngine {
   }
 
   on<K extends RLMEventType>(event: K, listener: (eventData: RLMEventMap[K]) => void): this {
-    this.rlm.on(event, listener);
+    this.getRlm().on(event, listener);
     return this;
   }
 
   off<K extends RLMEventType>(event: K, listener: (eventData: RLMEventMap[K]) => void): this {
-    this.rlm.off(event, listener);
+    this.getRlm().off(event, listener);
     return this;
   }
 
