@@ -1,6 +1,7 @@
 # Axolotl QLoRA config for fine-tuning Qwen3-8B
 # on the conversation intelligence gold-label dataset.
 #
+# Tested on: RTX 5090 32GB (Blackwell sm_120), torch 2.8+cu128, CUDA 12.8
 # Run: axolotl train docs/axolotl-qlora.yml
 # See: docs/FINE_TUNING.md for full instructions.
 #
@@ -9,6 +10,11 @@
 #   - chat_template must be tokenizer_default (not chatml) for Qwen3's token IDs
 #   - Qwen3-8B supports both thinking and non-thinking mode at inference time
 #     (we use think: false in Ollama extraParams — no training-time changes needed)
+#
+# RTX 5090 / Blackwell notes:
+#   - flash_attention: false — no precompiled sm_120 wheels; use sdpa instead
+#   - sdpa_attention: true  — torch 2.8 native SDPA works on sm_120 out of the box
+#   - adamw_bnb_8bit requires bitsandbytes >= 0.45; fallback: adamw_torch_fused
 
 base_model: Qwen/Qwen3-8B
 model_type: AutoModelForCausalLM
@@ -17,6 +23,10 @@ tokenizer_type: AutoTokenizer
 load_in_4bit: true
 strict: false
 fix_untrained_tokens: false
+
+# Attention — use native SDPA, not flash-attn (no sm_120 wheels)
+flash_attention: false
+sdpa_attention: true
 
 datasets:
   - path: output/fine-tuning/combined-train.jsonl
@@ -37,21 +47,21 @@ lora_target_linear: true
 sequence_len: 8192
 sample_packing: false
 
-micro_batch_size: 1
-gradient_accumulation_steps: 4   # effective batch = 4
+micro_batch_size: 2          # RTX 5090 has 32GB — bump to 2 for speed
+gradient_accumulation_steps: 2   # effective batch still = 4
 num_epochs: 3
 learning_rate: 0.0002
-optimizer: adamw_bnb_8bit
+optimizer: adamw_bnb_8bit    # requires bitsandbytes >= 0.45; see fallback note above
 lr_scheduler: cosine
 warmup_ratio: 0.1
 weight_decay: 0.01
 
-bf16: auto
-tf32: false
+bf16: true                   # Blackwell natively supports bf16; skip the 'auto' probe
+tf32: true                   # sm_120 supports tf32 tensor cores — faster matmuls
 gradient_checkpointing: true
 logging_steps: 1
 save_strategy: epoch
 
-# Increase dropout to 0.1 if eval loss diverges (overfitting signal on 50 examples)
-# Reduce num_epochs to 2 if overfitting persists
-# Consider bf16 LoRA (load_in_4bit: false) if QLoRA produces training instability
+# If bitsandbytes doesn't support sm_120:
+#   optimizer: adamw_torch_fused
+#   load_in_4bit: false   (full bf16 LoRA — 32GB is enough for Qwen3-8B in bf16)
